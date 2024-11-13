@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Totski Analytics - ML Model Predictions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      /* Align items to the top */
+      min-height: 100vh;
+      /* Ensure full height */
+      color: #333;
+      /* Dark gray text */
+    }
+
+    header {
+      background-color: #000;
+      /* Black header */
+      color: white;
+      /* White text */
+      padding: 20px;
+      text-align: center;
+      width: 100%;
+    }
+
+    nav {
+      margin: 20px;
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #000;
+      /* Black links */
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      text-decoration: underline;
+    }
+
+    section {
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      /* White background for sections */
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 80%;
+      max-width: 800px;
+      /* Set max width for form */
+    }
+
+    h1,
+    h2 {
+      color: #000;
+      /* Black headings */
+    }
+
+    #overview {
+      background-color: #f9f9f9;
+      /* Light gray background */
+    }
+
+    article {
+      margin-bottom: 20px;
+      padding: 20px;
+      background-color: #f9f9f9;
+      /* Light gray background for articles */
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      
+    }
+
+    h3 {
+      color: #000;
+      /* Black subheadings */
+    }
+
+    #title {
+      color: #ffffff;
+      /* Black title */
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    textarea {
+      width: 80%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      /* Light gray border */
+      border-radius: 4px;
+      margin-bottom: 20px;
+      font-family: monospace;
+    }
+
+    button {
+      background-color: #000;
+      /* Black button */
+      color: white;
+      /* White button text */
+      border: none;
+      /* No border */
+      padding: 10px 20px;
+      /* Padding inside button */
+      border-radius: 4px;
+      /* Rounded corners */
+      cursor: pointer;
+      /* Pointer cursor on hover */
+    }
+
+    button:hover {
+      background-color: #333;
+      /* Darker gray on hover */
+    }
+
+    pre {
+      background-color: #fff;
+      /* White background for response */
+      padding: 20px;
+      /* Padding inside pre */
+      border-radius: 8px;
+      /* Rounded corners */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      /* Shadow effect */
+      width: 80%;
+      /* Width of response area */
+      max-width: 600px;
+      /* Max width for response area */
+      overflow-x: auto;
+      /* Horizontal scroll if needed */
+    }
+
+    footer {
+      text-align: center;
+      padding-top: 10px;
+      padding-bottom: 10px;
+
+      color: white;
+
+      bottom: -10;
+      width: auto;
+      left: auto;
+      right: auto
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1 id="title">Welcome to Totski Analytics</h1>
+    <p>Leveraging Machine Learning for Business Solutions</p>
+  </header>
+
+  <nav>
+    <a href="/">Home</a>
+    <a href="#linear_regression">Linear Regression</a>
+    <a href="#naive_bayes">Naive Bayes</a>
+    <a href="#knn">K-Nearest Neighbors (KNN)</a>
+    <a href="#svm">Support Vector Machine (SVM)</a>
+    <a href="#decision_tree">Decision Tree</a>
+    <a href="#ann">Artificial Neural Network (ANN)</a>
+  </nav>
+
+  <section id="overview">
+    <h2>Company Overview</h2>
+    <p>This website showcases how Totski Analytics, a fictional data analytics company, utilizes various machine learning
+      algorithms to solve industry-specific challenges. Our mission is to leverage machine learning to drive business
+      success by providing data-driven insights.</p>
+  </section>
+
+  <section id="algorithms">
+    <h2>Machine Learning Algorithm Showcase</h2>
+
+    <article id="linear_regression">
+      <h3>Linear Regression</h3>
+      <p>Totski Analytics uses linear regression to forecast sales trends and predict customer demand for our retail
+        clients.</p>
+
+      <!-- Sample Data -->
+      <h4>Sample Data:</h4>
+      <pre>{"feature1": 1.0, "feature2": 2.0, "feature3": 3.0, "target": 0}</pre>
+
+      <!-- Form for Linear Regression -->
+      <form id="linearForm">
+        <label for="linearData">Input Data (JSON format):</label><br>
+        <textarea id="linearData" name="data" rows="3"
+          placeholder='{"feature1": value, "feature2": value, "feature3": value, "target": value}'></textarea><br>
+        <button type="button" onclick="sendRequest('/linear_regression', 'linearData')">Get Prediction</button>
+      </form>
+
+      <!-- Response area -->
+      <pre id="linearResponse"></pre>
+    </article>
+
+    <article id="naive_bayes">
+      <h3>Naive Bayes</h3>
+      <p>Our Naive Bayes classifier is instrumental in identifying potential financial fraud for our banking clients.
+      </p>
+
+      <!-- Sample Data -->
+      <h4>Sample Data:</h4>
+      <pre>{"transaction_amount": 250, "is_fraud": 0}</pre>
+
+      <!-- Form for Naive Bayes -->
+      <form id="naiveBayesForm">
+        <label for="naiveData">Input Data (JSON format):</label><br>
+        <textarea id="naiveData" name="data" rows="3"
+          placeholder='{"transaction_amount": value, "is_fraud": value}'></textarea><br>
+        <button type="button" onclick="sendRequest('/naive_bayes', 'naiveData')">Get Prediction</button>
+      </form>
+
+      <!-- Response area -->
+      <pre id="naiveResponse"></pre>
+    </article>
+
+    <article id="knn">
+      <h3>K-Nearest Neighbors (KNN)</h3>
+      <p>Totski Analytics leverages KNN to categorize patients based on their medical data and symptoms.</p>
+
+      <!-- Sample Data -->
+      <h4>Sample Data:</h4>
+      <pre>{"age": 30, "cholesterol": 220, "disease": 0}</pre>
+
+      <!-- Form for KNN -->
+      <form id="knnForm">
+        <label for="knnData">Input Data (JSON format):</label><br>
+        <textarea id="knnData" name="data" rows="3"
+          placeholder='{"age": value, "cholesterol": value, "disease": value}'></textarea><br>
+        <button type="button" onclick="sendRequest('/knn', 'knnData')">Get Prediction</button>
+      </form>
+
+      <!-- Response area -->
+      <pre id="knnResponse"></pre>
+    </article>
+
+    <article id="svm">
+      <h3>Support Vector Machine (SVM)</h3>
+      <p>Our SVM model helps our insurance clients accurately predict the likelihood of claims.</p>
+
+      <!-- Sample Data -->
+      <h4>Sample Data:</h4>
+      <pre>{"age": 45, "previous_claims": 1, "claim_likelihood": 0}</pre>
+
+      <!-- Form for SVM -->
+      <form id="svmForm">
+        <label for="svmData">Input Data (JSON format):</label><br>
+        <textarea id="svmData" name="data" rows="3"
+          placeholder='{"age": value, "previous_claims": value, "claim_likelihood": value}'></textarea><br>
+        <button type="button" onclick="sendRequest('/svm', 'svmData')">Get Prediction</button>
+      </form>
+
+      <!-- Response area -->
+      <pre id="svmResponse"></pre>
+    </article>
+
+    <article id="decision_tree">
+      <h3>Decision Tree</h3>
+      <p>Totski Analytics utilizes decision trees to assist our education clients in identifying at-risk students.</p>
+
+      <!-- Sample Data -->
+      <h4>Sample Data:</h4>
+      <pre>{"study_hours": 2, "attendance_rate": 80, "at_risk": 1}</pre>
+
+      <!-- Form for Decision Tree -->
+      <form id="decisionTreeForm">
+        <label for="decisionData">Input Data (JSON format):</label><br>
+        <textarea id="decisionData" name="data" rows="3"
+          placeholder='{"study_hours": value, "attendance_rate": value, "at_risk": value}'></textarea><br>
+        <button type="button" onclick="sendRequest('/decision_tree', 'decisionData')">Get Prediction</button>
+      </form>
+
+      <!-- Response area -->
+      <pre id="decisionResponse"></pre>
+    </article>
+
+    <article id="ann">
+      <h3>Artificial Neural Network (ANN)</h3>
+      <p>Our deep learning models automate document processing for our legal clients.</p>
+
+      <!-- Sample Data -->
+      <h4>Sample Data:</h4>
+      <pre>{"feature1": 0.1, "feature2": 0.2, "feature3": 0.3, "target": 0}</pre>
+
+      <!-- Form for ANN -->
+      <form id="annForm">
+        <label for="annData">Input Data (JSON format):</label><br>
+        <textarea id="annData" name="data" rows="3"
+          placeholder='{"feature1": value, "feature2": value, "feature3": value, "target": value}'></textarea><br>
+        <button type="button" onclick="sendRequest('/ann', 'annData')">Get Prediction</button>
+      </form>
+
+      <!-- Response area -->
+      <pre id="annResponse"></pre>
+    </article>
+
+  </section>
+
+  <!-- JavaScript to handle requests -->
+  <script>
+    function sendRequest(endpoint, textareaId) {
+      const data = document.getElementById(textareaId).value;
+
+      fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: data
+      })
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById(textareaId.replace('Data', 'Response')).textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+          document.getElementById(textareaId.replace('Data', 'Response')).textContent = 'Error: ' + error.message;
+        });
+    }
+  </script>
+
+  <!-- Footer Section -->
+  <footer>
+    &copy; 2024 Totski Analytics. All rights reserved.
+  </footer>
+
+</body>
+
+</html>
