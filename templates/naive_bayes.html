@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Naive Bayes Disease Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>HealthPredictor</h2>
+        <p>HealthPredictor is a cutting-edge web application that empowers users to forecast their health outcomes by analyzing their lifestyle choices. By integrating user-provided data, such as exercise frequency, dietary habits, and environmental factors, HealthPredictor employs advanced predictive analytics to deliver personalized insights.
+            Users can easily upload their data in CSV format or input it directly as JSON. The application utilizes robust statistical models to generate accurate predictions about future health metrics, such as weight changes over time.
+            With an intuitive interface and user-friendly features, HealthPredictor enables individuals to make informed decisions about their health and wellness journeys. Whether optimizing fitness routines or adjusting dietary plans, HealthPredictor provides valuable, tailored recommendations that help users achieve their health goals effectively. Embrace the future of health management with HealthPredictor!</p>
+        <form id="naiveBayesForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Upload CSV File (optional):</label>
+                <input type="file" class="form-control-file" id="file" name="file" accept=".csv">
+            </div>
+            <div class="form-group">
+                <label for="data">Or Enter Data as JSON:</label>
+                <textarea class="form-control" id="data" name="data" rows="5" placeholder='Enter a JSON-formatted data'></textarea>
+                <small class="form-text text-muted">Sample Data: {
+                    "fever": [1, 0, 1, 0],
+                    "cough": [1, 1, 0, 0],
+                    "fatigue": [0, 1, 1, 0],
+                    "disease": [1, 0, 1, 0]
+                }</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div id="result" class="mt-4"></div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('#naiveBayesForm').on('submit', function(event){
+                event.preventDefault(); // Prevent the default form submission
+
+                var formData = new FormData(this);
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '/naive_bayes',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.error) {
+                            $('#result').html('<div class="alert alert-danger">' + response.error + '</div>');
+                        } else {
+                            $('#result').html('<div class="alert alert-success">Based on your symptoms, there is a ' + response.predictions[0].toFixed(2) + '% probability that you have the flu. Consult a doctor if symptoms persist.</div>');
+                        }
+                    },
+                    error: function() {
+                        $('#result').html('<div class="alert alert-danger">An error occurred while processing your request.</div>');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

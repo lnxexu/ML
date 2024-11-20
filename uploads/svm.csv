@@ -1,0 +1,5 @@
+blood_pressure,heart_rate,cholesterol,smoking,exercise_habits,diet,risk_category
+120,70,200,0,3,1,0
+130,80,240,1,2,0,1
+140,75,220,1,1,1,1
+110,65,180,0,3,0,0

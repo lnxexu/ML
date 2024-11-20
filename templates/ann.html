@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Prediction Using Artificial Neural Network</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>WellnessPredictor</h2>
+        <p>WellnessPredictor is an advanced web application that utilizes Artificial Neural Networks (ANN) to forecast health events based on user-specific data. By analyzing critical health metrics such as heart rate, sleep cycles, physical activity levels, and blood sugar levels, WellnessPredictor identifies potential health risks and provides personalized recommendations.
+            Users can easily upload their health data in CSV format or enter it directly as JSON. The application processes this information through sophisticated neural network algorithms to generate insights about the likelihood of various health events, such as fatigue-related issues or stress impacts.
+            With its user-friendly interface and actionable insights, WellnessPredictor empowers individuals to take charge of their health by making informed decisions and adopting healthier lifestyle choices. Whether you aim to improve your fitness routine or manage stress levels, WellnessPredictor offers tailored advice to enhance your overall well-being. Experience the future of health management with WellnessPredictor!</p>
+        <form id="annForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Upload CSV File (optional):</label>
+                <input type="file" class="form-control-file" id="file" name="file" accept=".csv">
+            </div>
+            <div class="form-group">
+                <label for="data">Or Enter Data as JSON:</label>
+                <textarea class="form-control" id="data" name="data" rows="5"
+                    placeholder='Enter a JSON-formatted data'></textarea>
+                <small class="form-text text-muted">Sample Data: {
+                    "heart_rate": [70, 80, 75, 65],
+                    "sleep_cycles": [8, 6, 7, 8],
+                    "physical_activity_levels": [3, 2, 1, 3],
+                    "blood_sugar_levels": [90, 110, 100, 85],
+                    "health_event": [1, 0, 1, 0]
+                }</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div id="result" class="mt-4"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#annForm').on('submit', function (event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/ann',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.error) {
+                            $('#result').html('<div class="alert alert-danger">' + response.error + '</div>');
+                        } else {
+                            // Check if predictions exist
+                            if (response.prediction && response.prediction.length > 0) {
+                                let recs = response.prediction[0]; // Get the first recommendation
+                                $('#result').html('<div class="alert alert-success">Your heart rate variability indicates stress. Based on patterns, there’s a ' + recs.probability.toFixed(2) + '% chance of fatigue-related issues this week.<br>Recommendation: ' + recs.recommendation + '</div>');
+                            } else {
+                                $('#result').html('<div class="alert alert-warning">No predictions available.</div>');
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Recommendation Using Decision Tree</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h2>HealthAdvisor</h2>
+        <p>HealthAdvisor is an innovative web application designed to provide personalized health recommendations using advanced decision tree algorithms. By analyzing user-specific data such as age, gender, existing health conditions, symptoms, and dietary preferences, HealthAdvisor generates tailored advice to enhance overall well-being.
+            Users can easily upload their health data in CSV format or input it directly as JSON. The application processes this information through a decision tree model to identify patterns and deliver actionable insights. Recommendations may include lifestyle changes, dietary suggestions, and guidance on medical consultations based on individual health profiles.
+            With its intuitive interface and user-friendly features, HealthAdvisor empowers individuals to take proactive steps toward improving their health. Whether you're managing chronic conditions or seeking to optimize your wellness routine, HealthAdvisor offers tailored strategies that align with your unique needs. Experience the future of personalized health management with HealthAdvisor!</p>
+        <form id="decisionTreeForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Upload CSV File (optional):</label>
+                <input type="file" class="form-control-file" id="file" name="file" accept=".csv">
+            </div>
+            <div class="form-group">
+                <label for="data">Or Enter Data as JSON:</label>
+                <textarea class="form-control" id="data" name="data" rows="5"
+                    placeholder='Enter a JSON-formatted data'></textarea>
+                <small class="form-text text-muted">Sample Data: [{"age": 45, "gender": "male", "existing_conditions": "hypertension", "symptoms": "headache, dizziness", "preferences": "vegetarian"}, {"age": 30, "gender": "female", "existing_conditions": "none", "symptoms": "fatigue", "preferences": "non-vegetarian"}]</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div id="result" class="mt-4"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            $('#decisionTreeForm').on('submit', function (event) {
+                event.preventDefault(); // Prevent the default form submission
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/decision_tree',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        if (response.error) {
+                            $('#result').html('<div class="alert alert-danger">' + response.error + '</div>');
+                        } else {
+                            // Check if recommendations exist
+                            if (response.recommendations && response.recommendations.length > 0) {
+                                let recsHtml = '<div class="alert alert-success">Based on your inputs, here are your recommended plans:<br>';
+                                response.recommendations.forEach((recs, index) => {
+                                    recsHtml += '<strong>Recommendation ' + (index + 1) + ':</strong><br>' +
+                                        'Morning: ' + recs.morning + '<br>' +
+                                        'Diet: ' + recs.diet + '<br>' +
+                                        'Doctor visit: ' + recs.doctor_visit + '<br><br>';
+                                });
+                                recsHtml += '</div>';
+                                $('#result').html(recsHtml);
+                            } else {
+                                $('#result').html('<div class="alert alert-warning">No recommendations available.</div>');
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitPredictor - Weight Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Welcome to FitPredictor</h2>
+        <p>FitPredictor is an innovative web application designed to help users forecast their weight based on their lifestyle choices, including exercise frequency, dietary habits, and environmental factors. By leveraging advanced predictive analytics, FitPredictor allows users to upload their data in CSV format or enter it directly as JSON. The application utilizes a sophisticated linear regression model to analyze the input data and generate personalized weight predictions for the next six months.
+            With an intuitive interface and user-friendly features, FitPredictor empowers individuals to make informed decisions about their health and wellness journeys. Whether you’re looking to optimize your fitness routine or adjust your diet, FitPredictor provides valuable insights tailored to your unique circumstances. Embrace the power of data-driven predictions and take proactive steps toward achieving your health goals with FitPredictor!</p>
+        <form id="regressionForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Upload CSV File (optional):</label>
+                <input type="file" class="form-control-file" id="file" name="file" accept=".csv">
+            </div>
+            <div class="form-group">
+                <label for="data">Or Enter Data as JSON:</label>
+                <textarea class="form-control" id="data" name="data" rows="5" placeholder='Enter a JSON-formatted data'></textarea>
+                <small class="form-text text-muted">Sample Data: {
+                    "exercise_frequency": [3, 4, 5, 2],
+                    "diet": [2, 3, 3, 1],
+                    "air_quality": [1, 2, 2, 1],
+                    "weight": [70, 75, 80, 65]
+                }</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div id="result" class="mt-4"></div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('#regressionForm').on('submit', function(event){
+                event.preventDefault(); // Prevent the default form submission
+
+                var formData = new FormData(this);
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '/linear_regression',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.error) {
+                            $('#result').html('<div class="alert alert-danger">' + response.error + '</div>');
+                        } else {
+                            $('#result').html('<div class="alert alert-success">Based on your exercise and dietary patterns, your predicted weight in six months is ' + response.predictions[0].toFixed(2) + ' kg.</div>');
+                        }
+                    },
+                    error: function() {
+                        $('#result').html('<div class="alert alert-danger">An error occurred while processing your request.</div>');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

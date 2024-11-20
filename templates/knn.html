@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Nearest Neighbors Health Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>HealthMatch</h2>
+        <p>HealthMatch is an innovative web application designed to predict health outcomes by leveraging the K-Nearest Neighbors (KNN) algorithm. By analyzing user-provided data such as age, gender, chronic conditions, medications, diet, exercise habits, and smoking status, HealthMatch identifies patterns and similarities within a vast dataset of health profiles.
+            Users can easily upload their data in CSV format or input it directly as JSON. The application processes this information to calculate how closely a user's health profile aligns with those of individuals who have successfully responded to specific health interventions or lifestyle changes.
+            With its intuitive interface and user-friendly features, HealthMatch empowers individuals to make informed decisions about their health and wellness. Whether you're looking to optimize your diet, manage chronic conditions, or improve your overall health, HealthMatch provides tailored recommendations based on proven outcomes. Discover the potential of personalized health management with HealthMatch!</p>
+        <form id="knnForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Upload CSV File (optional):</label>
+                <input type="file" class="form-control-file" id="file" name="file" accept=".csv">
+            </div>
+            <div class="form-group">
+                <label for="data">Or Enter Data as JSON:</label>
+                <textarea class="form-control" id="data" name="data" rows="5" placeholder='Enter a JSON-formatted data'></textarea>
+                <small class="form-text text-muted">Sample Data:{
+                    "age": [25, 30, 45, 50],
+                    "gender": ["M", "F", "M", "F"],
+                    "chronic_conditions": [0, 1, 1, 0],
+                    "medications": [0, 1, 1, 0],
+                    "diet": [2, 3, 1, 2],
+                    "exercise": [3, 2, 1, 3],
+                    "smoking": [0, 1, 1, 0],
+                    "health_outcome": [1, 0, 1, 0]
+                }</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div id="result" class="mt-4"></div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('#knnForm').on('submit', function(event){
+                event.preventDefault(); // Prevent the default form submission
+
+                var formData = new FormData(this);
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '/knn',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.error) {
+                            $('#result').html('<div class="alert alert-danger">' + response.error + '</div>');
+                        } else {
+                            $('#result').html('<div class="alert alert-success">Your health profile is ' + response.predictions[0].toFixed(2) + '% similar to patients who responded well to a specific diet plan. Consider adopting it for better results.</div>');
+                        }
+                    },
+                    error: function() {
+                        $('#result').html('<div class="alert alert-danger">An error occurred while processing your request.</div>');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

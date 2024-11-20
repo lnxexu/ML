@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVM Health Risk Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>CardioGuard</h2>
+        <p>CardioGuard is an advanced web application designed to assess and predict cardiovascular health risks using Support Vector Machine (SVM) algorithms. By analyzing user-provided data such as blood pressure, heart rate, cholesterol levels, smoking habits, exercise routines, and dietary choices, CardioGuard delivers personalized health risk assessments.
+            Users can conveniently upload their data in CSV format or input it directly as JSON. The application processes this information to categorize users into specific risk categories for cardiovascular diseases, providing valuable insights into their heart health.
+            With its intuitive interface and user-friendly features, CardioGuard empowers individuals to make informed decisions about their lifestyle and wellness. Whether you're looking to monitor your heart health or seeking guidance for lifestyle changes, CardioGuard offers tailored recommendations and encourages proactive engagement with healthcare professionals. Protect your heart's future with CardioGuard!</p>
+        <form id="svmForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="file">Upload CSV File (optional):</label>
+                <input type="file" class="form-control-file" id="file" name="file" accept=".csv">
+            </div>
+            <div class="form-group">
+                <label for="data">Or Enter Data as JSON:</label>
+                <textarea class="form-control" id="data" name="data" rows="5" placeholder='Enter a JSON-formatted data'></textarea>
+                <small class="form-text text-muted">Sample Data: {
+                    "blood_pressure": [120, 130, 140, 110],
+                    "heart_rate": [70, 80, 75, 65],
+                    "cholesterol": [200, 240, 220, 180],
+                    "smoking": [0, 1, 1, 0],
+                    "exercise_habits": [3, 2, 1, 3],
+                    "diet": [1, 0, 1, 0],
+                    "risk_category": [0, 1, 1, 0]
+                }</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+        <div id="result" class="mt-4"></div>
+    </div>
+
+    <script>
+        $(document).ready(function(){
+            $('#svmForm').on('submit', function(event){
+                event.preventDefault(); // Prevent the default form submission
+
+                var formData = new FormData(this);
+                
+                $.ajax({
+                    type: 'POST',
+                    url: '/svm',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.error) {
+                            $('#result').html('<div class="alert alert-danger">' + response.error + '</div>');
+                        } else {
+                            $('#result').html('<div class="alert alert-success">You fall into the ‘' + response.predictions[0] + '’ category for cardiovascular diseases based on your metrics. Consider consulting a cardiologist and making lifestyle changes.</div>');
+                        }
+                    },
+                    error: function() {
+                        $('#result').html('<div class="alert alert-danger">An error occurred while processing your request.</div>');
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
